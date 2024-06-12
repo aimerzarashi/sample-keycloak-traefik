@@ -10,6 +10,31 @@ tls:
           - /etc/traefik/certs/client/inCA2.pem
         clientAuthType: RequireAndVerifyClientCert
 http:
+  middlewares:
+    test-passtlsclientcert:
+      passTLSClientCert:
+        pem: true
+        info:
+          notAfter: true
+          notBefore: true
+          sans: true
+          subject:
+            country: true
+            province: true
+            locality: true
+            organization: true
+            organizationalUnit: true
+            commonName: true
+            serialNumber: true
+            domainComponent: true
+          issuer:
+            country: true
+            province: true
+            locality: true
+            organization: true
+            commonName: true
+            serialNumber: true
+            domainComponent: true
   routers:
     traefik:
       rule: "Host(`traefik.aimerzarashi.com`)"
@@ -29,6 +54,8 @@ http:
       rule: "Host(`idp.aimerzarashi.com`)"
       service: idp
       tls: {}
+      middlewares:
+        - test-passtlsclientcert
     smtp:
       rule: "Host(`smtp.aimerzarashi.com`)"
       service: smtp
