@@ -19,6 +19,8 @@ openssl req -new -newkey rsa:4096 -keyout server.key -out server.csr -nodes -sub
 
 ```
 openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in server.csr -out server.crt -days 365 -CAcreateserial -extfile server.ext
+
+openssl x509 -in server.crt -text
 ```
 
 ### Create pkcs12 file for server
