@@ -6,56 +6,70 @@ tls:
     client-auth:
       clientAuth:
         caFiles:
-          - /etc/traefik/certs/client/rootCA2.pem
-          - /etc/traefik/certs/client/inCA2.pem
+          - /etc/traefik/certs/client/rootCA.pem
         clientAuthType: RequireAndVerifyClientCert
+#   options:
+#     client-auth:
+#       clientAuth:
+#         caFiles:
+#           - /etc/traefik/certs/client/rootCA2.pem
+#           - /etc/traefik/certs/client/inCA2.pem
+#         clientAuthType: RequireAndVerifyClientCert
 http:
-  middlewares:
-    test-passtlsclientcert:
-      passTLSClientCert:
-        pem: true
-        info:
-          notAfter: true
-          notBefore: true
-          sans: true
-          subject:
-            country: true
-            province: true
-            locality: true
-            organization: true
-            organizationalUnit: true
-            commonName: true
-            serialNumber: true
-            domainComponent: true
-          issuer:
-            country: true
-            province: true
-            locality: true
-            organization: true
-            commonName: true
-            serialNumber: true
-            domainComponent: true
+  # middlewares:
+  #   test-passtlsclientcert:
+  #     passTLSClientCert:
+  #       pem: true
+  #       info:
+  #         notAfter: true
+  #         notBefore: true
+  #         sans: true
+  #         subject:
+  #           country: true
+  #           province: true
+  #           locality: true
+  #           organization: true
+  #           organizationalUnit: true
+  #           commonName: true
+  #           serialNumber: true
+  #           domainComponent: true
+  #         issuer:
+  #           country: true
+  #           province: true
+  #           locality: true
+  #           organization: true
+  #           commonName: true
+  #           serialNumber: true
+  #           domainComponent: true
   routers:
     traefik:
       rule: "Host(`traefik.aimerzarashi.com`)"
       service: api@internal
+      # tls: {}
       tls:
         options: client-auth@file
     whoami:
       rule: "Host(`whoami.aimerzarashi.com`)"
       service: whoami
+      # tls: {}
       tls:
         options: client-auth@file
     web:
       rule: "Host(`web.aimerzarashi.com`)"
       service: web
       tls: {}
+      # tls:
+      #   options: client-auth@file
     idp:
+      entryPoints:
+        - "websecure"
       rule: "Host(`idp.aimerzarashi.com`)"
       service: idp
       tls: {}
-      middlewares:
-        - test-passtlsclientcert
+      # tls:
+      #   options: client-auth@file
+      # middlewares:
+      #   - test-passtlsclientcert
     smtp:
       rule: "Host(`smtp.aimerzarashi.com`)"
       service: smtp
@@ -71,9 +85,14 @@ http:
           - url: http://web:3000
     idp:
       loadBalancer:
+        serversTransport: mytransport
         servers:
-          - url: http://idp:8080
+          # - url: http://idp:8080
+          - url: https://idp:8443
     smtp:
       loadBalancer:
         servers:
           - url: http://smtp:8025
+  serversTransports:
+    mytransport:
+      insecureSkipVerify: true
