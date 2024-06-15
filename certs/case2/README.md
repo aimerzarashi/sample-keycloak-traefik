@@ -49,7 +49,9 @@ docker run -it --rm -v .:/etc/keystore -w /etc/keystore joostdecock/keytool -imp
 ### Create a truststore using keytool
 
 ```
-openssl pkcs12 -export -in rootCA.crt -inkey rootCA.key -out truststore.p12 -name "server certificate" -chain -CAfile rootCA.crt -caname "self signed ca certificate" -passin pass:1234 -passout pass:4567
+<!-- openssl pkcs12 -export -in rootCA.crt -inkey rootCA.key -out truststore.p12 -name "server certificate" -chain -CAfile rootCA.crt -caname "self signed ca certificate" -passin pass:1234 -passout pass:4567 -->
+
+openssl pkcs12 -export -in rootCA.crt -inkey rootCA.key -out truststore.p12 -name "server certificate" -chain -CAfile rootCA.crt -caname "self signed ca certificate" -passin pass:1234
 
 openssl pkcs12 -in truststore.p12 -out truststore.pem -nodes
 

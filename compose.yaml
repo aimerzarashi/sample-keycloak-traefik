@@ -39,6 +39,7 @@ services:
   idp:
     image: keycloak/keycloak:25.0
     environment:
+      # KC_LOG_LEVEL: info,org.keycloak.authentication:trace
       KEYCLOAK_ADMIN: user
       KEYCLOAK_ADMIN_PASSWORD: bitnami
       KC_DB: postgres
@@ -47,50 +48,18 @@ services:
       KC_DB_URL_DATABASE: bitnami_keycloak
       KC_DB_PASSWORD: password
       KC_DB_USERNAME: bn_keycloak
-      KC_HOSTNAME_URL: "https://idp.aimerzarashi.com"
-      KC_HOSTNAME_ADMIN_URL: "https://idp.aimerzarashi.com"
+      KC_HOSTNAME: idp.aimerzarashi.com
+      KC_HTTP_ENABLED: false
       KC_HOSTNAME_STRICT: false
-      KC_PROXY_HEADERS: "xforwarded"
+      KC_PROXY_HEADERS: xforwarded
       KC_HTTPS_CLIENT_AUTH: request
-      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/truststores/keystore.p12
+      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/keystores/keystore.p12
       KC_HTTPS_KEY_STORE_PASSWORD: 2345
-      KC_HTTPS_TRUST_STORE_FILE: /opt/keycloak/conf/truststores/truststore.p12
-      KC_HTTPS_TRUST_STORE_PASSWORD: 4567
-      KC_SPI_TRUSTSTORE_FILE_FILE: /opt/keycloak/conf/truststores/truststore.p12
-      KC_SPI_TRUSTSTORE_FILE_PASSWORD: 4567
     command:
-      # - "start-dev"
       - "start"
     volumes:
-      - ./idp/certs:/opt/keycloak/conf/truststores
-    # image: bitnami/keycloak:24
-    # environment:
-    #   KEYCLOAK_ADMIN_USER: user
-    #   KEYCLOAK_ADMIN_PASSWORD: bitnami
-    #   KEYCLOAK_DATABASE_HOST: db
-    #   KEYCLOAK_DATABASE_PORT: 5432
-    #   KEYCLOAK_DATABASE_NAME: bitnami_keycloak
-    #   KEYCLOAK_DATABASE_USER: bn_keycloak
-    #   KEYCLOAK_DATABASE_PASSWORD: password
-    #   KC_HOSTNAME_URL: "https://idp.aimerzarashi.com"
-    #   KC_HOSTNAME_ADMIN_URL: "https://idp.aimerzarashi.com"
-    # KEYCLOAK_PROXY: edge
-    # KEYCLOAK_PRODUCTION: true
-    # KEYCLOAK_ENABLE_HTTPS: true
-    # KEYCLOAK_HTTPS_USE_PEM: true
-    # KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/server.pem
-    # KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/server.key
-    # KEYCLOAK_PROXY: reencrypt
-    # KEYCLOAK_PRODUCTION: true
-    # KEYCLOAK_ENABLE_HTTPS: true
-    # KEYCLOAK_HTTPS_KEY_STORE_FILE: /opt/bitnami/keycloak/certs/keystore.jks
-    # KEYCLOAK_HTTPS_KEY_STORE_PASSWORD: 123456
-    # KEYCLOAK_HTTPS_TRUST_STORE_FILE: /opt/bitnami/keycloak/certs/truststore.jks
-    # KEYCLOAK_HTTPS_TRUST_STORE_PASSWORD: 234567
-    # KEYCLOAK_SPI_TRUSTSTORE_FILE: /opt/bitnami/keycloak/certs/truststore.jks
-    # KEYCLOAK_SPI_TRUSTSTORE_PASSWORD: 234567
-    # volumes:
-    #   - ./idp/certs:/opt/bitnami/keycloak/certs
+      - ./idp/keystores:/opt/keycloak/conf/keystores
+      - ./idp/truststores:/opt/keycloak/conf/truststores
     depends_on:
       - db
       - smtp
