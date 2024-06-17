@@ -53,12 +53,12 @@ services:
       KC_HOSTNAME_STRICT: false
       KC_PROXY_HEADERS: xforwarded
       KC_HTTPS_CLIENT_AUTH: request
-      KC_HTTPS_KEY_STORE_FILE: /opt/keycloak/conf/keystores/keystore.p12
-      KC_HTTPS_KEY_STORE_PASSWORD: 2345
+      KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/certs/server.pem
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/certs/server.key
     command:
       - "start"
     volumes:
-      - ./idp/keystores:/opt/keycloak/conf/keystores
+      - ./idp/certs:/opt/keycloak/conf/certs
       - ./idp/truststores:/opt/keycloak/conf/truststores
     depends_on:
       - db

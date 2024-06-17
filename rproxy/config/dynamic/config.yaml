@@ -6,44 +6,17 @@ tls:
     client-auth:
       clientAuth:
         caFiles:
-          - /etc/traefik/certs/client/rootCA.pem
+          - /etc/traefik/certs/client/rootCA2.pem
+          - /etc/traefik/certs/client/inCA2.pem
         clientAuthType: RequireAndVerifyClientCert
-#   options:
-#     client-auth:
-#       clientAuth:
-#         caFiles:
-#           - /etc/traefik/certs/client/rootCA2.pem
-#           - /etc/traefik/certs/client/inCA2.pem
-#         clientAuthType: RequireAndVerifyClientCert
 http:
   serversTransports:
     mytransport:
       insecureSkipVerify: true
-  # middlewares:
-  #   test-passtlsclientcert:
-  #     passTLSClientCert:
-  #       pem: true
-  #       info:
-  #         notAfter: true
-  #         notBefore: true
-  #         sans: true
-  #         subject:
-  #           country: true
-  #           province: true
-  #           locality: true
-  #           organization: true
-  #           organizationalUnit: true
-  #           commonName: true
-  #           serialNumber: true
-  #           domainComponent: true
-  #         issuer:
-  #           country: true
-  #           province: true
-  #           locality: true
-  #           organization: true
-  #           commonName: true
-  #           serialNumber: true
-  #           domainComponent: true
+  middlewares:
+    test-passtlsclientcert:
+      passTLSClientCert:
+        pem: true
   routers:
     traefik:
       rule: "Host(`traefik.aimerzarashi.com`)"
@@ -67,8 +40,7 @@ http:
       rule: "Host(`idp.aimerzarashi.com`)"
       service: idp
       tls: {}
-      # middlewares:
-      #   - test-passtlsclientcert
+      middlewares: test-passtlsclientcert
     smtp:
       rule: "Host(`smtp.aimerzarashi.com`)"
       service: smtp
@@ -86,7 +58,6 @@ http:
       loadBalancer:
         serversTransport: mytransport
         servers:
-          # - url: http://idp:8080
           - url: https://idp:8443
     smtp:
       loadBalancer:
