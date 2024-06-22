@@ -20,6 +20,14 @@ services:
       - --providers.docker
   whoami:
     image: traefik/whoami
+    command:
+      - --name=whoami
+      - --port=443
+      - --cert=/certs/server.pem
+      - --key=/certs/server.key
+      - --cacert=/certs/rootCA.pem
+    volumes:
+      - ./certs/self/all:/certs
   web:
     image: node:20-alpine3.18
     ports:
@@ -50,6 +58,7 @@ services:
       KC_DB_USERNAME: bn_keycloak
       KC_HOSTNAME: idp.aimerzarashi.com
       KC_HTTP_ENABLED: false
+      # KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT: false
       KC_PROXY_HEADERS: xforwarded
       KC_HTTPS_CLIENT_AUTH: request
